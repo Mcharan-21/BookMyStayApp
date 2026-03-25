@@ -1,3 +1,5 @@
+import java.util.HashMap;
+
 abstract class Room {
 
     private String type;
@@ -41,6 +43,32 @@ class SuiteRoom extends Room {
     }
 }
 
+class RoomInventory {
+
+    private HashMap<String, Integer> inventory;
+
+    public RoomInventory() {
+        inventory = new HashMap<>();
+        inventory.put("Single Room", 5);
+        inventory.put("Double Room", 3);
+        inventory.put("Suite Room", 2);
+    }
+
+    public int getAvailability(String type) {
+        return inventory.getOrDefault(type, 0);
+    }
+
+    public void updateAvailability(String type, int count) {
+        inventory.put(type, count);
+    }
+
+    public void displayInventory() {
+        for (String type : inventory.keySet()) {
+            System.out.println(type + " Available: " + inventory.get(type));
+        }
+    }
+}
+
 public class BookMyStayApp {
 
     public static void main(String[] args) {
@@ -49,12 +77,12 @@ public class BookMyStayApp {
         Room dual = new DoubleRoom();
         Room suite = new SuiteRoom();
 
-        int singleAvailable = 5;
-        int doubleAvailable = 3;
-        int suiteAvailable = 2;
+        RoomInventory inventory = new RoomInventory();
 
-        System.out.println(single.getType() + " | Beds: " + single.getBeds() + " | Price: " + single.getPrice() + " | Available: " + singleAvailable);
-        System.out.println(dual.getType() + " | Beds: " + dual.getBeds() + " | Price: " + dual.getPrice() + " | Available: " + doubleAvailable);
-        System.out.println(suite.getType() + " | Beds: " + suite.getBeds() + " | Price: " + suite.getPrice() + " | Available: " + suiteAvailable);
+        System.out.println(single.getType() + " | Available: " + inventory.getAvailability(single.getType()));
+        System.out.println(dual.getType() + " | Available: " + inventory.getAvailability(dual.getType()));
+        System.out.println(suite.getType() + " | Available: " + inventory.getAvailability(suite.getType()));
+
+        inventory.displayInventory();
     }
 }
