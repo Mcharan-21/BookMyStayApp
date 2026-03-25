@@ -1,4 +1,6 @@
 import java.util.HashMap;
+import java.util.Queue;
+import java.util.LinkedList;
 
 abstract class Room {
 
@@ -51,7 +53,7 @@ class RoomInventory {
         inventory = new HashMap<>();
         inventory.put("Single Room", 5);
         inventory.put("Double Room", 3);
-        inventory.put("Suite Room", 0);
+        inventory.put("Suite Room", 2);
     }
 
     public int getAvailability(String type) {
@@ -59,17 +61,40 @@ class RoomInventory {
     }
 }
 
-class RoomSearchService {
+class Reservation {
 
-    public static void searchRooms(Room[] rooms, RoomInventory inventory) {
+    private String guestName;
+    private String roomType;
 
-        for (Room room : rooms) {
+    public Reservation(String guestName, String roomType) {
+        this.guestName = guestName;
+        this.roomType = roomType;
+    }
 
-            int available = inventory.getAvailability(room.getType());
+    public String getGuestName() {
+        return guestName;
+    }
 
-            if (available > 0) {
-                System.out.println(room.getType() + " | Beds: " + room.getBeds() + " | Price: " + room.getPrice() + " | Available: " + available);
-            }
+    public String getRoomType() {
+        return roomType;
+    }
+}
+
+class BookingQueue {
+
+    private Queue<Reservation> queue;
+
+    public BookingQueue() {
+        queue = new LinkedList<>();
+    }
+
+    public void addRequest(Reservation reservation) {
+        queue.add(reservation);
+    }
+
+    public void displayRequests() {
+        for (Reservation r : queue) {
+            System.out.println(r.getGuestName() + " requested " + r.getRoomType());
         }
     }
 }
@@ -78,14 +103,14 @@ public class BookMyStayApp {
 
     public static void main(String[] args) {
 
-        Room[] rooms = {
-                new SingleRoom(),
-                new DoubleRoom(),
-                new SuiteRoom()
-        };
-
         RoomInventory inventory = new RoomInventory();
 
-        RoomSearchService.searchRooms(rooms, inventory);
+        BookingQueue bookingQueue = new BookingQueue();
+
+        bookingQueue.addRequest(new Reservation("Charan", "Single Room"));
+        bookingQueue.addRequest(new Reservation("Rahul", "Double Room"));
+        bookingQueue.addRequest(new Reservation("Anjali", "Suite Room"));
+
+        bookingQueue.displayRequests();
     }
 }
